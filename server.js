@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 
 const app = express();
 
-// تفعيل الـ CORS بصفة تامة باش Netlify ينجم يقرا البيانات بدون مشاكل
+// تفعيل الـ CORS باش Netlify ينجم يقرأ البيانات بدون مشاكل
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST'],
@@ -13,6 +13,7 @@ app.use(cors({
 
 app.use(express.json());
 
+// إعدادات بوت ديسكورد
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -20,6 +21,7 @@ const client = new Client({
   ]
 });
 
+// حط التوكن والايدي الصحيحين متاعك هنا
 const TOKEN = "MTQ3MzA4NjMzNTUzODY5MjI4OQ.GTFBC4.RW0LFyydjoNee1tzDEM0siAhdMKVhAWyqRvP08"; 
 const SERVER_ID = "821153079079469076";
 
@@ -27,6 +29,7 @@ client.on('ready', () => {
   console.log(`Bot logged in as ${client.user.tag}!`);
 });
 
+// الـ API باش تبعث المعلومات للداشبورد
 app.get('/api/server-info', (req, res) => {
   const guild = client.guilds.cache.get(SERVER_ID);
   
@@ -41,9 +44,11 @@ app.get('/api/server-info', (req, res) => {
   });
 });
 
+// تسجيل دخول البوت
 client.login(TOKEN);
 
+// تشغيل السيرفر على البورت المطلوب من Render (بصيغة صحيحة ونظيفة)
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
-});ORT, () => console.log(`Backend running on port ${PORT}`));
+});`Backend running on port ${PORT}`));
