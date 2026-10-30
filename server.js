@@ -1,40 +1,49 @@
 const express = require('express');
-const { Client, GatewayIntentBits } = require('discord.js');
 const cors = require('cors');
+const { Client, GatewayIntentBits } = require('discord.js');
 
 const app = express();
+
+// تفعيل الـ CORS بصفة تامة باش Netlify ينجم يقرا البيانات بدون مشاكل
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
+
 app.use(express.json());
-app.use(cors());
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildBans
+    GatewayIntentBits.GuildMembers
   ]
 });
 
-// حط التوكن وسيرفر آي دي متاعك هنا مباشرة بين الظفرين
-const BOT_TOKEN = 'MTQ3MzA4NjMzNTUzODY5MjI4OQ.GTFBC4.RW0LFyydjoNee1tzDEM0siAhdMKVhAWyqRvP08';
-const GUILD_ID = '821153079079469076';
+const TOKEN = "MTQ3MzA4NjMzNTUzODY5MjI4OQ.GTFBC4.RW0LFyydjoNee1tzDEM0siAhdMKVhAWyqRvP08"; 
+const SERVER_ID = "821153079079469076";
 
-client.once('ready', () => {
-  console.log(`[DEATH NOTE] Bot is Online as ${client.user.tag}`);
+client.on('ready', () => {
+  console.log(`Bot logged in as ${client.user.tag}!`);
 });
 
-app.post('/api/ban', async (req, res) => {
-  const { userId, reason } = req.body;
-  try {
-    const guild = await client.guilds.fetch(GUILD_ID);
-    await guild.members.ban(userId, { reason: reason || 'Execution by Death Note Dashboard' });
-    return res.status(200).json({ success: true, message: 'User banned' });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, error: error.message });
+app.get('/api/server-info', (req, res) => {
+  const guild = client.guilds.cache.get(SERVER_ID);
+  
+  if (!guild) {
+    return res.status(404).json({ error: 'Server not found or bot not in server' });
   }
+
+  res.json({
+    name: guild.name,
+    memberCount: guild.memberCount,
+    icon: guild.iconURL()
+  });
 });
 
-client.login(BOT_TOKEN);
+client.login(TOKEN);
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
+});ORT, () => console.log(`Backend running on port ${PORT}`));
